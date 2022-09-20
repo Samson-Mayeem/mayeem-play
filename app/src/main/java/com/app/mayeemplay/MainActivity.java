@@ -3,6 +3,7 @@ package com.app.mayeemplay;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -55,12 +56,14 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<File> findsong(File file){
         ArrayList<File> arrayList = new ArrayList<>();
         File[] files = file.listFiles();
-        for (File singlefile: files){
-            if (singlefile.isDirectory() && !singlefile.isHidden()){
-                arrayList.addAll(findsong(singlefile));
-            }else {
-                if (singlefile.getName().endsWith(".mp3") || singlefile.getName().endsWith(".wav")){
-                    arrayList.add(singlefile);
+        if (files != null) {
+            for (File singlefile: files){
+                if (singlefile.isDirectory() && !singlefile.isHidden()){
+                    arrayList.addAll(findsong(singlefile));
+                }else {
+                    if (singlefile.getName().endsWith(".mp3") || singlefile.getName().endsWith(".wav")){
+                        arrayList.add(singlefile);
+                    }
                 }
             }
         }
@@ -73,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < mySongs.size(); i++){
             items[i] = mySongs.get(i).getName().toString().replace(".mp3", "").replace(".wav", "");
         }
-        /*ArrayAdapter<String> myAdapter= new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,items);
-        listView.setAdapter(myAdapter);*/
+        ArrayAdapter<String> myAdapter= new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,items);
+        listView.setAdapter(myAdapter);
         customAdapter customAdapter = new customAdapter();
         listView.setAdapter(customAdapter);
     }
@@ -97,12 +100,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            View myview = getLayoutInflater().inflate(R.layout.list_item, null);
+            @SuppressLint({"ViewHolder", "InflateParams"}) View myview = getLayoutInflater().inflate(R.layout.list_item, null);
             TextView textsong = myview.findViewById(R.id.txtsongname);
             textsong.setSelected(true);
             textsong.setText(items[i]);
             return myview;
         }
     }
-
 }
